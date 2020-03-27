@@ -18,7 +18,7 @@ Let's say that on my computer, I have a folder for my project at  `/Users/linkja
 
 Let's also assume for my project I'm using a private data of 01/01/2018.
 
-I need to open a command line, and change to be in the directory `/Users/linkja/linkja-test-project`.  From there, I can run the following command to execute the linkja-hashing engine on my project file:
+I need to open a command line, and change to be in the directory `/Users/linkja/linkja-docker/test-data`.  From there, I can run the following command to execute the linkja-hashing engine on my project file:
 
 ```docker run --rm -v "$PWD":/data linkja-docker public-agg.key project-data.csv salt.txt 01/01/2018 output```
 
