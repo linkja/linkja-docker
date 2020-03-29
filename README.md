@@ -1,4 +1,4 @@
-# linkja-Docker
+# Linkja Docker Images
 
 This project contains the necessary files to create Docker images for the linkja software suite.  This has helped ease deployment across platforms.  Even though linkja is built using Java (which is cross-platform), the underlying reliance on OpenSSL and a C crypto library can make cross-platform building difficult to maintain.  The use of Docker images and containers was implemented to address this.
 
