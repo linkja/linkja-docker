@@ -6,6 +6,7 @@ The following sub-projects exist.  You can find instructions on building the Doc
 
 * [linkja-crypto](linkja-crypto)
 * [linkja-hashing](linkja-hashing)
+* [linkja-matching](linkja-matching)
 * [linkja-salt-engine](linkja-salt-engine)
 
 This repository also contains a [sample test data directory](test-data) that will get you up and going quickly for a simple test.
