@@ -1,7 +1,7 @@
 FROM adoptopenjdk/openjdk11
 
 RUN apt-get update
-RUN apt-get install -y git cmake build-essential pkg-config libssl-dev maven
+RUN apt-get install -y git libssl-dev maven
 
 RUN mkdir /opt/linkja
 WORKDIR /opt/linkja
@@ -11,7 +11,7 @@ WORKDIR /opt/linkja/linkja-hashing
 RUN mvn clean package -DskipTests=true
 RUN cp ./target/Hashing-*-jar-with-dependencies.jar /opt/linkja/linkja-hashing.jar
 WORKDIR /opt/linkja
-RUN rm -rf WORKDIR /opt/linkja/linkja-hashing/
+RUN rm -rf /opt/linkja/linkja-hashing/
 
 RUN apt-get install -y dos2unix
 COPY linkja-hashing.sh .

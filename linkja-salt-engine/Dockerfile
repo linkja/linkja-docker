@@ -11,7 +11,7 @@ WORKDIR /opt/linkja/linkja-salt-engine
 RUN mvn clean package -DskipTests=true
 RUN cp ./target/SaltEngine-*-jar-with-dependencies.jar /opt/linkja/linkja-salt-engine.jar
 WORKDIR /opt/linkja
-RUN rm -rf WORKDIR /opt/linkja/linkja-salt-engine/
+RUN rm -rf /opt/linkja/linkja-salt-engine/
 
 RUN apt-get install -y dos2unix
 COPY linkja-salt-engine.sh .
