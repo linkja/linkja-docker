@@ -1,19 +1,35 @@
 FROM adoptopenjdk/openjdk11
+LABEL maintainer="luke.rasmussen@gmail.com"
 
-RUN apt-get update
-RUN apt-get install -y git cmake build-essential pkg-config libssl-dev maven
+ARG BUILD_DATE
+ARG VERSION
 
-RUN mkdir /opt/linkja
-RUN mkdir /data
+LABEL org.opencontainers.image.title="linkja-crypto"
+LABEL org.opencontainers.image.description="Linkja crypto library used for secure hashing across projects"
+LABEL org.opencontainers.image.authors="Luke Rasmussen"
+LABEL org.opencontainers.image.source="https://github.com/linkja/linkja-crypto"
+LABEL org.opencontainers.image.url="https://linkja.github.io/"
+LABEL org.opencontainers.image.version=$VERSION
+LABEL org.opencontainers.image.build-date=$BUILD_DATE
+
+RUN apt-get update && apt-get install -y \
+    git \
+    cmake \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    maven \
+    dos2unix \
+ && rm -rf /var/lib/apt/lists/* \
+ && mkdir /opt/linkja && \
+    mkdir /data
 
 WORKDIR /opt/linkja
 
 RUN git clone -b linux-build https://github.com/linkja/linkja-crypto.git .
 
-RUN apt-get install -y dos2unix
 COPY linkja-crypto.sh .
-# Handle Windows line endings, if present.  Solution courtesy of https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-endings/
-RUN dos2unix linkja-crypto.sh && apt-get --purge remove -y dos2unix
+RUN dos2unix linkja-crypto.sh
 RUN ["chmod", "+x", "/opt/linkja/linkja-crypto.sh"]
 
 ENTRYPOINT [ "./linkja-crypto.sh" ]

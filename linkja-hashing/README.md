@@ -22,7 +22,7 @@ Let's also assume for my project I'm using a private data of 01/01/2018.
 
 I need to open a command line, and change to be in the directory `/Users/linkja/linkja-docker/test-data`.  From there, I can run the following command to execute the linkja-hashing engine on my project file on macOS or Linux:
 
-```docker run --rm -v "$PWD":/data linkja-hashing public-agg.key project-data.csv salt.txt 01/01/2018 output```
+```docker run --rm -v "$PWD":/data linkja/linkja-hashing:latest public-agg.key project-data.csv salt.txt 01/01/2018 output```
 
 Or on Windows:
 
@@ -33,9 +33,9 @@ Here the `-v "$PWD":/data` option is telling Docker to map the current directory
 ## Building the image
 Users typically will not need to build the Docker image.  This will be done by the project coordinator.
 
-The Docker image is created via:
+The Docker image is created via the following command, with the exception that you will need to specify the version of linkja-hashing that you are building the image for (e.g., 0.8) and substitute that in for `{version}`.
 
-`docker build -t linkja-hashing .`
+`docker build --no-cache=true --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --build-arg VERSION={version} -t linkja/linkja-hashing:latest -t linkja/linkja-hashing:{version} .`
 
 Verify that the image was created locally.
 
@@ -43,4 +43,12 @@ Verify that the image was created locally.
 
 If you need to remove the image the following command will remove the image locally.
 
-`docker rmi linkja-hashing`
+`docker rmi linkja/linkja-hashing`
+
+This can be deployed to Docker Hub using:
+
+`docker push linkja/linkja-hashing`
+
+If you get permission errors, make sure you have logged in to Docker Hub from the command line via:
+
+`docker login docker.io`
