@@ -1,4 +1,4 @@
-# linkja-hashing
+# Docker image for linkja-hashing
 
 Docker image containing runnable linkja-hashing software.  To ensure security and privacy of the patient data being processed, it uses a project-specific crypto library.  You should not distribute the crypto library you receive, nor should you place it under source control.
 
@@ -26,7 +26,7 @@ I need to open a command line, and change to be in the directory `/Users/linkja/
 
 Or on Windows:
 
-```docker run --rm -v %cd%:/data linkja-hashing public-agg.key project-data.csv salt.txt 01/01/2018 output```
+```docker run --rm -v %cd%:/data linkja/linkja-hashing:latest public-agg.key project-data.csv salt.txt 01/01/2018 output```
 
 Here the `-v "$PWD":/data` option is telling Docker to map the current directory on our machine (the directory we're in, which Docker discovers via `"$PWD"`) to the `/data` directory in the container.  The container is set up to look in that directory for all of the necessary files, and it will write results to the `output` folder.  When the container stops running, it shuts down and cleans itself up, but the files in the input and output directory still exist.
 

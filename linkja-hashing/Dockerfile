@@ -34,6 +34,7 @@ RUN ["chmod", "+x", "/opt/linkja/linkja-hashing.sh"]
 # Clean up the items we no longer need
 RUN rm -rf /opt/linkja/linkja-hashing/ && \
     rm -rf /opt/linkja/.m2 && \
-    apt-get --purge remove -y dos2unix git maven
+    apt-get --purge remove -y dos2unix git maven && \
+    apt autoremove -y
 
 ENTRYPOINT [ "./linkja-hashing.sh" ]

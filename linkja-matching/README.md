@@ -1,4 +1,4 @@
-# linkja-matching
+# Docker image for linkja-matching
 
 Docker image containing runnable linkja-matching software.  To ensure security and privacy of the patient data being processed, it uses a project-specific crypto library.  You should not distribute the crypto library you receive, nor should you place it under source control.
 
@@ -20,20 +20,20 @@ Let's also assume for my project that the files in `output` all start with `hash
 
 I need to open a command line, and change to be in the directory `/Users/linkja/linkja-docker/test-data`.  From there, I can run the following command to execute the linkja-hashing engine on my project file on macOS or Linux:
 
-```docker run --rm -v "$PWD":/data linkja-matching --decrypt output hashes .enc private-agg.key```
+```docker run --rm -v "$PWD":/data linkja/linkja-matching:latest --decrypt output hashes .enc private-agg.key```
 
 Or on Windows:
 
-```docker run --rm -v %cd%:/data linkja-matching --decrypt output hashes .enc private-agg.key```
+```docker run --rm -v %cd%:/data linkja/linkja-matching:latest --decrypt output hashes .enc private-agg.key```
 
 Here the `-v "$PWD":/data` option is telling Docker to map the current directory on our machine (the directory we're in, which Docker discovers via `"$PWD"`) to the `/data` directory in the container.  The container is set up to look in that directory for all of the necessary files, and it will write results to the `output` folder.  When the container stops running, it shuts down and cleans itself up, but the files in the input and output directory still exist.
 
 ## Building the image
 Users typically will not need to build the Docker image.  This will be done by the project coordinator.
 
-The Docker image is created via:
+The Docker image is created via the following command, with the exception that you will need to specify the version of linkja-matching that you are building the image for (e.g., 1.1.0) and substitute that in for `{version}`.
 
-`docker build -t linkja-matching .`
+`docker build --no-cache=true --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --build-arg VERSION={version} -t linkja/linkja-matching:latest -t linkja/linkja-matching:{version} .`
 
 Verify that the image was created locally.
 
@@ -41,4 +41,12 @@ Verify that the image was created locally.
 
 If you need to remove the image the following command will remove the image locally.
 
-`docker rmi linkja-matching`
+`docker rmi linkja/linkja-matching`
+
+This can be deployed to Docker Hub using:
+
+`docker push linkja/linkja-matching`
+
+If you get permission errors, make sure you have logged in to Docker Hub from the command line via:
+
+`docker login docker.io`

@@ -1,27 +1,39 @@
 FROM adoptopenjdk/openjdk11:alpine
+LABEL maintainer="luke.rasmussen@gmail.com"
 
-RUN apk update && apk upgrade
-RUN apk add --no-cache git maven dos2unix
+ARG BUILD_DATE
+ARG VERSION
 
-RUN mkdir /opt/linkja
+LABEL org.opencontainers.image.title="linkja-matching"
+LABEL org.opencontainers.image.description="Linkja process used to perform matching across patient identifier hashes"
+LABEL org.opencontainers.image.authors="Luke Rasmussen"
+LABEL org.opencontainers.image.source="https://github.com/linkja/linkja-matching"
+LABEL org.opencontainers.image.url="https://linkja.github.io/"
+LABEL org.opencontainers.image.version=$VERSION
+LABEL org.opencontainers.image.build-date=$BUILD_DATE
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache \
+        git \
+        maven \
+        dos2unix && \
+    mkdir /opt/linkja && \
+    mkdir /data
+
 WORKDIR /opt/linkja
-
 RUN git clone https://github.com/linkja/linkja-matching.git
 WORKDIR /opt/linkja/linkja-matching
-RUN mvn clean package
-RUN cp ./target/Matching-*-jar-with-dependencies.jar /opt/linkja/linkja-matching.jar
+RUN mvn clean package && \
+    cp ./target/Matching-*-jar-with-dependencies.jar /opt/linkja/linkja-matching.jar
 WORKDIR /opt/linkja
-RUN rm -rf /opt/linkja/linkja-matching/
-RUN rm -rf /opt/linkja/.m2
 
 COPY linkja-matching.sh .
-# Handle Windows line endings, if present.  Solution courtesy of https://willi.am/blog/2016/08/11/docker-for-windows-dealing-with-windows-line-endings/
 RUN dos2unix linkja-matching.sh
 RUN ["chmod", "+x", "/opt/linkja/linkja-matching.sh"]
 
-# Clean up the packages we no longer need
-RUN apk del dos2unix git maven
-
-RUN mkdir /data
+# Clean up the items we no longer need
+RUN rm -rf /opt/linkja/linkja-matching/ && \
+    rm -rf /opt/linkja/.m2 && \
+    apk del dos2unix git maven
 
 ENTRYPOINT [ "./linkja-matching.sh" ]

@@ -1,4 +1,4 @@
-# linkja-salt-engine
+# Docker image for linkja-salt-engine
 
 Docker image containing runnable linkja-salt-engine software.  To ensure security and privacy of the patient data being processed, it uses a project-specific crypto library.  You should not distribute the crypto library you receive, nor should you place it under source control.
 
@@ -24,11 +24,11 @@ Let's also assume for my project that I'm calling it "Test Project".
 
 I need to open a command line, and change to be in the directory `/Users/linkja/linkja-docker/test-data`.  From there, I can run the following command to execute the linkja-salt-engine on macOS or Linux:
 
-```docker run --rm -v "$PWD":/data linkja-salt-engine --generateProject sites.csv "Test Project"```
+```docker run --rm -v "$PWD":/data linkja/linkja-salt-engine:latest --generateProject sites.csv "Test Project"```
 
 Or on Windows:
 
-```docker run --rm -v %cd%:/data linkja-salt-engine --generateProject sites.csv "Test Project"```
+```docker run --rm -v %cd%:/data linkja/linkja-salt-engine:latest --generateProject sites.csv "Test Project"```
 
 Here the `-v "$PWD":/data` option is telling Docker to map the current directory on our machine (the directory we're in, which Docker discovers via `"$PWD"`) to the `/data` directory in the container.  The container is set up to look in that directory for all of the necessary files, and it will write results to the same folder.  When the container stops running, it shuts down and cleans itself up, but the files still exist.
 
@@ -50,20 +50,20 @@ Let's say that on my computer, I have a folder for my project at  `/Users/linkja
 
 I need to open a command line, and change to be in the directory `/Users/linkja/linkja-docker/test-data`.  From there, I can run the following command to execute the linkja-salt-engine on macOS or Linux:
 
-```docker run --rm -v "$PWD":/data linkja-salt-engine --addSites extra-sites.csv Test_001_20200329.txt```
+```docker run --rm -v "$PWD":/data linkja/linkja-salt-engine:latest --addSites extra-sites.csv Test_001_20200329.txt```
 
 Or on Windows:
 
-```docker run --rm -v %cd%:/data linkja-salt-engine --addSites extra-sites.csv Test_001_20200329.txt```
+```docker run --rm -v %cd%:/data linkja/linkja-salt-engine:latest --addSites extra-sites.csv Test_001_20200329.txt```
 
 Here the `-v "$PWD":/data` option is telling Docker to map the current directory on our machine (the directory we're in, which Docker discovers via `"$PWD"`) to the `/data` directory in the container.  The container is set up to look in that directory for all of the necessary files, and it will write results to the same folder.  When the container stops running, it shuts down and cleans itself up, but the files still exist.
 
 ## Building the image
 Users typically will not need to build the Docker image.  This will be done by the project coordinator.
 
-The Docker image is created via:
+The Docker image is created via the following command, with the exception that you will need to specify the version of linkja-salt-engine that you are building the image for (e.g., 0.3) and substitute that in for `{version}`.
 
-`docker build -t linkja-salt-engine .`
+`docker build --no-cache=true --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --build-arg VERSION={version} -t linkja/linkja-salt-engine:latest -t linkja/linkja-salt-engine:{version} .`
 
 Verify that the image was created locally.
 
@@ -71,4 +71,12 @@ Verify that the image was created locally.
 
 If you need to remove the image the following command will remove the image locally.
 
-`docker rmi linkja-salt-engine`
+`docker rmi linkja/linkja-salt-engine`
+
+This can be deployed to Docker Hub using:
+
+`docker push linkja/linkja-salt-engine`
+
+If you get permission errors, make sure you have logged in to Docker Hub from the command line via:
+
+`docker login docker.io`
